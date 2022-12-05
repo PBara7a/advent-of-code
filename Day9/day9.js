@@ -55,6 +55,7 @@ for (let i = 0; i < input.length; i++) {
       leftHeight,
       rightHeight,
     ].filter((height) => height !== undefined);
+    console.log(adjacentHeights);
 
     if (adjacentHeights.every((height) => curHeight < height)) {
       lowPoints.push(curHeight);

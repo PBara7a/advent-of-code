@@ -60,7 +60,7 @@ input.forEach((line) => {
   let onePanels, fourPanels;
   for (const [key, value] of Object.entries(signalPatternsMap)) {
     if (value === 1) onePanels = key.split("");
-    if (value === 4) fourPanels = key.split("");
+    else if (value === 4) fourPanels = key.split("");
   }
 
   // Find the panels that lit the left square angle of a "four"

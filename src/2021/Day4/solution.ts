@@ -19,42 +19,34 @@ async function main() {
     )
   );
 
+  const [firstScore, lastScore] = getScores(bingoNumbers, cards);
+
   return {
-    PartA: getScoreOfFirstWinner(bingoNumbers, cards),
-    PartB: getScoreOfLastWinner(bingoNumbers, cards),
+    PartA: firstScore,
+    PartB: lastScore,
   };
 }
 
-function getScoreOfFirstWinner(bingoNumbers: Array<number>, cards: Array<Card>): number | null {
-  for (const num of bingoNumbers) {
-    for (const card of cards) {
-      markNumber(card, num);
-      if (isWinner(card)) {
-        return calculateScore(card, num);
-      }
-    }
-  }
-  return null;
-}
-
-function getScoreOfLastWinner(bingoNumbers: Array<number>, cards: Array<Card>): number {
+function getScores(bingoNumbers: Array<number>, cards: Array<Card>): Array<number> {
   let remainingCardsNum = cards.length;
-  const winningCards: Record<string, number> = {};
+  const winningScores: Record<string, number> = {};
+  const winnerIndeces: Array<number> = [];
 
   for (const num of bingoNumbers) {
+    if (!remainingCardsNum) break
     for (let i = 0; i < cards.length; i++) {
       markNumber(cards[i], num);
 
-      if (isWinner(cards[i]) && !(i in winningCards)) {
-        winningCards[i] = i;
+      if (isWinnerCard(cards[i]) && !(i in winningScores)) {
+        winningScores[i] = calculateScore(cards[i], num);
+        winnerIndeces.push(i);
         remainingCardsNum--;
       } 
-      if (!remainingCardsNum) {
-        return calculateScore(cards[i], num);
-      }
     }
   }
-  return 0;
+  const firstWinnerScore = winningScores[winnerIndeces[0]];
+  const lastWinnerScore = winningScores[winnerIndeces[winnerIndeces.length - 1]];
+  return [firstWinnerScore, lastWinnerScore];
 }
 
 function markNumber(card: Card, number: number): void {
@@ -64,7 +56,7 @@ function markNumber(card: Card, number: number): void {
   });
 }
 
-function isWinner(card: Card): boolean {
+function isWinnerCard(card: Card): boolean {
   const hasWinningLine: boolean = card.some((line) => isWinningLine(line));
   const hasWinningColumn: boolean = card[0].reduce((isWinner: boolean, _: CardNumber, i: number) => {
       if (isWinningColumn(card, i)) isWinner = true;

@@ -2,9 +2,7 @@ import fs from "fs/promises";
 
 async function main(file: string) {
   const data: string = await fs.readFile(file, { encoding: "utf-8" });
-  const grid: number[][] = data
-    .split("\r\n")
-    .map((line) => line.split("").map(Number));
+  const grid: number[][] = data.split("\r\n").map((line) => line.split("").map(Number));
   const lowPoints: Array<number> = [];
   const basins: Array<number> = [];
   const gridCopy: number[][] = JSON.parse(JSON.stringify(grid));

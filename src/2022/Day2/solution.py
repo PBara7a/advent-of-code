@@ -11,7 +11,7 @@ STRATEGY_MAP = { # X = lose, Y = draw, Z = win
     "Z": { "A": "B", "B": "C", "C": "A" }
 }
 
-def play_hand(elf_hand: str, my_hand: str) -> int:
+def score_round(elf_hand: str, my_hand: str) -> int:
     result = (3 + HAND_VALUES[elf_hand] - HAND_VALUES[my_hand]) % 3
     # result: 0 -> draw, 1 -> elf wins, 2 -> I win
     if result == 2:
@@ -27,9 +27,9 @@ for line in data:
 part_a_score = 0
 part_b_score = 0
 for hand in rounds:
-    part_a_score += play_hand(hand[0], hand[1])
+    part_a_score += score_round(hand[0], hand[1])
     strategy_hand = STRATEGY_MAP[hand[1]][hand[0]]
-    part_b_score += play_hand(hand[0], strategy_hand)
+    part_b_score += score_round(hand[0], strategy_hand)
 
 print("Part A: ", part_a_score)
 print("Part B: ", part_b_score)

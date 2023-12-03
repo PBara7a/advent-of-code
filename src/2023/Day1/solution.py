@@ -21,7 +21,7 @@ def get_calibrations(data: list, replace_words=False) -> list:
     def process_line(line: str, inverted=False) -> str:
         if replace_words:
             line = replace_number_words(line, inverted=inverted)
-        return "".join(re.findall(r'\d+', line))
+        return "".join(re.findall(r"\d+", line))
     
     calibrations = []
     for line in data:

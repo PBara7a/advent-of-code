@@ -1,6 +1,3 @@
-import re
-import math
-
 with open("input.txt") as f:
     data = f.read()
 data = data.replace("\r\n", "\n") # Just in case I run this on Windows
@@ -30,7 +27,7 @@ def calculate_power(game: dict) -> int:
         cur_green = group.get("green", 0)
         cur_blue = group.get("blue", 0)
         max_cubes = [max(a, b) for a, b in zip(max_cubes, [cur_red, cur_green, cur_blue])]
-    return math.prod(max_cubes)
+    return max_cubes[0] * max_cubes[1] * max_cubes[2]
     
 parsed_games = [parse_game(game) for game in data]
 

@@ -3,7 +3,7 @@ with open("input.txt") as f:
 data = data.replace("\r\n", "\n") # Just in case I run this on Windows
 data = data.split("\n")
 
-def parse_card(card: str) -> tuple:
+def parse_card(card: str) -> dict:
     numbers = card.split(": ")[1]
     winning_numbers, card_numbers = numbers.split(" | ")
     winning_numbers = winning_numbers.split()

@@ -1,7 +1,5 @@
 with open("input.txt") as f:
-    data = f.read()
-data = data.replace("\r\n", "\n") # Just in case I run this on Windows
-data = data.split("\n")
+    data = f.read().split("\n")
 
 def parse_group(group: str) -> dict:
     parsed_group = {}

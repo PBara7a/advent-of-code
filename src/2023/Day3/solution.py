@@ -1,9 +1,7 @@
 from collections import defaultdict
 
 with open("input.txt") as f:
-    data = f.read()
-data = data.replace("\r\n", "\n") # Just in case I run this on Windows
-data = data.split("\n")
+    data = f.read().split("\n")
 
 def calculate_gear_ratios(possible_gears: dict) -> int:
     gear_ratios_sum = 0

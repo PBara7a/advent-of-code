@@ -11,8 +11,10 @@ def get_hand_weight(cards: str, using_jokers=False) -> int:
         jokers = card_counts.pop("J", 0)
         if jokers == 5:
             return hand_weights["Five of a Kind"]
-        card_counts = Counter({card: count + jokers * (card == max(card_counts, key=card_counts.get)) for card, count in card_counts.items()})
-    card_counts = card_counts.most_common()
+        most_common_card = max(card_counts, key=card_counts.get, default=None)
+        if most_common_card and jokers:
+            card_counts[most_common_card] += jokers        
+    card_counts = Counter(card_counts).most_common()
     most_common = card_counts[0]
 
     if most_common[1] == 5:

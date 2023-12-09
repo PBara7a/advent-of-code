@@ -1,4 +1,3 @@
-import math
 with open("input.txt") as f:
     data = [[int(value) for value in line.split()] for line in f.read().split("\n")]
 

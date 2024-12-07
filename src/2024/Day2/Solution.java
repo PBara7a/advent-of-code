@@ -42,21 +42,20 @@ public class Solution {
 		return true;
 	}
 
-	private static boolean isReportSafe( List<Integer> report, boolean useDampener ) {
-		if ( report.size() < 4 ) {
-			return false;
-		}
-
+	private static boolean isReportSafe( List<Integer> report, boolean useDampener, boolean isVariation ) {
 		boolean isOrdered = areLevelsOrdered( report );
 		if ( !isOrdered || !areLevelDeltasValid( report ) ) {
-			return useDampener && isAnyVariationSafe( createReportVariations( report ) );
+			if ( useDampener && !isVariation ) {
+				return isAnyVariationSafe( createReportVariations( report ) );
+			}
+			return false;
 		}
 		return true;
 	}
 
 	private static long countSafeReports( List<List<Integer>> reports, boolean dampener ) {
 		return reports.stream()
-				.filter( report -> isReportSafe( report, dampener ) )
+				.filter( report -> isReportSafe( report, dampener, false ) )
 				.count();
 	}
 
@@ -72,6 +71,6 @@ public class Solution {
 
 	private static boolean isAnyVariationSafe( List<List<Integer>> variations ) {
 		return variations.stream()
-				.anyMatch( variation -> isReportSafe( variation, false ) );
+				.anyMatch( variation -> isReportSafe( variation, false, true ) );
 	}
 }

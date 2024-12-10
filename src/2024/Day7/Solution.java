@@ -36,25 +36,20 @@ public class Solution {
 		return testMap;
 	}
 
-	public static List<List<String>> generatePermutations( List<String> operators, int length ) {
+	private static List<List<String>> generatePermutations( List<String> operators, int length ) {
+		if ( length == 0 ) {
+			return List.of( new ArrayList<>() );
+		}
+
 		List<List<String>> permutations = new ArrayList<>();
-
-		generatePermutationsHelper( operators, length, new ArrayList<>(), permutations );
-		return permutations;
-	}
-
-	private static void generatePermutationsHelper( List<String> operators, int length,
-			List<String> current, List<List<String>> permutations ) {
-		if ( current.size() == length ) {
-			permutations.add( new ArrayList<>(current) );
-			return;
-		}
-
 		for ( String operator : operators ) {
-			current.add(operator);
-			generatePermutationsHelper( operators, length, current, permutations );
-			current.removeLast();
+			for ( List<String> subPermutation : generatePermutations( operators, length - 1 ) ) {
+				List<String> newPermutation = new ArrayList<>(subPermutation);
+				newPermutation.add( operator );
+				permutations.add( newPermutation );
+			}
 		}
+		return permutations;
 	}
 
 	private static boolean isValidTest( long result, List<Integer> operands, List<List<String>> operators ) {
@@ -74,24 +69,14 @@ public class Solution {
 	private static long sumValidTestValues ( Map<Long, List<Integer>> testMap, List<String> validOperators ) {
 		Map<Integer, List<List<String>>> operatorPermutations = new HashMap<>();
 
-		long totalValidTestValues = 0;
-
-		for ( Map.Entry<Long, List<Integer>> test : testMap.entrySet() ) {
-			long result = test.getKey();
-			List<Integer> operands = test.getValue();
-			int permutationLength = operands.size() - 1;
-
-			if ( !operatorPermutations.containsKey( permutationLength ) ) {
-				operatorPermutations.put( permutationLength, generatePermutations( validOperators, permutationLength ) );
-			}
-
-			List<List<String>> testOpPermutations = operatorPermutations.get( permutationLength );
-
-			if ( isValidTest( result, operands, testOpPermutations ) ) {
-				totalValidTestValues += result;
-			}
-		}
-		return totalValidTestValues;
+		return testMap.entrySet().stream()
+				.filter( entry -> {
+					int permutationLength = entry.getValue().size() - 1;
+					operatorPermutations.computeIfAbsent( permutationLength, len -> generatePermutations( validOperators, len ) );
+					return isValidTest( entry.getKey(), entry.getValue(), operatorPermutations.get( permutationLength ) );
+				} )
+				.mapToLong( Map.Entry::getKey )
+				.sum();
 	}
 
 }
@@ -123,16 +108,10 @@ enum Operation {
 
 	public abstract long apply( long x, long y );
 
-	public String getOperator() {
-		return operator;
-	}
-
 	public static Operation getOperation( String operator ) {
-		for ( Operation operation : Operation.values() ) {
-			if ( operation.getOperator().equals( operator ) ) {
-				return operation;
-			}
-		}
-		throw new IllegalArgumentException( "Invalid operation: " + operator );
+		return Arrays.stream( values() )
+				.filter( operation -> operation.operator.equals( operator ) )
+				.findFirst()
+				.orElseThrow( IllegalArgumentException::new );
 	}
 }

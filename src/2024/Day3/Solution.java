@@ -51,7 +51,7 @@ public class Solution {
 
 	private static int multiplyAndSumOperators( List<List<Integer>> operators ) {
 		return operators.stream()
-				.mapToInt( opPair -> opPair.get(0) * opPair.get(1) )
+				.mapToInt( opPair -> opPair.getFirst() * opPair.get(1) )
 				.sum();
 	}
 }

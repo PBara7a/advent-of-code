@@ -205,10 +205,6 @@ class DirectionalCoordinate extends Coordinate {
 		return direction;
 	}
 
-	public void setDirection( String direction ) {
-		this.direction = direction;
-	}
-
 	@Override
 	public String toString() {
 		return String.format( "(%d,%d) - Direction: %s", getRow(), getCol(), direction );

@@ -7,6 +7,8 @@ import java.util.List;
 
 public class Solution {
 
+	private static final int DIAL_SIZE = 100;
+
 	public static void main( String[] args ) throws IOException {
 
 		List<String> lines = Files.readAllLines( Paths.get( "src/2025/Day1/input.txt" ) );
@@ -16,28 +18,20 @@ public class Solution {
 		int passedZeroCount = 0;
 
 		for ( final String line : lines ) {
-			final char direction = line.charAt( 0 );
-			final int clicks = Integer.parseInt( line.substring( 1 ) );
+			final int clicks = parseClicks(  line );
 
-			final int dialMovement = switch ( direction ) {
-				case 'L' -> -clicks;
-				case 'R' -> clicks;
-				default -> throw new IllegalArgumentException( "Invalid direction: " + direction );
-			};
-
-			final int dialFullRotations = Math.abs( dialMovement ) / 100;
+			final int dialFullRotations = Math.abs( clicks ) / DIAL_SIZE;
 			passedZeroCount += dialFullRotations;
 
-			final int remainingDialMovement = dialMovement % 100;
-			final int dialRawValue = currentDialPosition + remainingDialMovement;
+			final int remainingClicks = clicks % DIAL_SIZE;
+			final int dialRawValue = currentDialPosition + remainingClicks;
 
-			if ( dialRawValue >= 100 ) { // Check if we pass zero turning the dial right
-				passedZeroCount++;
-			} else if ( currentDialPosition != 0 && dialRawValue <= 0 ) { // Check if we pass zero turning the dial left
+			// Check if we pass zero after the remaining clicks (going right | going left)
+			if ( dialRawValue >= DIAL_SIZE || (currentDialPosition != 0 && dialRawValue <= 0 )) {
 				passedZeroCount++;
 			}
 
-			currentDialPosition = ( dialRawValue % 100 + 100 ) % 100;
+			currentDialPosition = ( dialRawValue % DIAL_SIZE + DIAL_SIZE ) % DIAL_SIZE;
 			if ( currentDialPosition == 0 ) {
 				stoppedAtZeroCount++;
 			}
@@ -45,5 +39,11 @@ public class Solution {
 
 		System.out.printf( "Part A: %d%n", stoppedAtZeroCount );
 		System.out.printf( "Part B: %d%n", passedZeroCount );
+	}
+
+	private static int parseClicks( final String line ) {
+		final char direction = line.charAt( 0 );
+		int clicks = Integer.parseInt( line.substring( 1 ) );
+		return direction == 'L' ? -clicks : clicks;
 	}
 }
